@@ -12,6 +12,14 @@
 
 # Web
 
+## File Upload Vuln
+
+Upload Web shells...
+
+Overwrite files by calling the filename "../../../../../../root/.ssh/authorized_keys"
+
+Then maybe try to log in?
+
 ## Local File Inclusion
 
 * Attempt to read the access log ->
