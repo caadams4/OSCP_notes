@@ -9,6 +9,8 @@
 
 ```$ nc -nvlp 4444```
 
+## RDP
+`sudo xfreerdp /u:"jason" /drive:/root /v:192.168.247.203`
 
 # Web
 
