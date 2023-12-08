@@ -161,3 +161,7 @@ Remember, WP Plugins are exploitable. Verisons can be found in the source code
 ### WP Plugin CVEs
 
 `https://github.com/Hacker5preme/Exploits/blob/main/README.md`
+
+# SMB
+
+Password guess: `crackmapexec smb 192.168.247.227 -u nadine -p /home/kali/rockyou.txt`
