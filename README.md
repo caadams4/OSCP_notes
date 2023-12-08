@@ -168,6 +168,11 @@ Password guess: `crackmapexec smb 192.168.247.227 -u nadine -p /home/kali/rockyo
 
 # Password Cracking
 
+KeePass to hash -> `keepass2john [name].kdbx > hashfile`
+
+ssh2john to hash -> `ssh2john [name] > hashfile`
+
 Best Rule for cracking: `https://github.com/Unic0rn28/hashcat-rules/blob/main/rules_full.7z`
+
 Hashcat: `hashcat -a 0 -m 13400 pass.txt /home/kali/rockyou.txt -r /home/kali/Downloads/rules_full.rule`
 
