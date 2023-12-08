@@ -165,3 +165,9 @@ Remember, WP Plugins are exploitable. Verisons can be found in the source code
 # SMB
 
 Password guess: `crackmapexec smb 192.168.247.227 -u nadine -p /home/kali/rockyou.txt`
+
+# Password Cracking
+
+Best Rule for cracking: `https://github.com/Unic0rn28/hashcat-rules/blob/main/rules_full.7z`
+Hashcat: `hashcat -a 0 -m 13400 pass.txt /home/kali/rockyou.txt -r /home/kali/Downloads/rules_full.rule`
+
