@@ -397,6 +397,8 @@ Get install applicaitons `> Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microso
 
 Get running process info `> Get-Process`
 
+Get specific process information `>  Get-Process | Select-Object -Property Path, Name | Where-Object -Property Name -Like "*ProCeSsNaMEHeRE*"`
+
 # Anti-virus Evasion
 
 ## Automating Process Injection and Evasion with Sheller
