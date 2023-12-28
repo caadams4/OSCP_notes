@@ -373,7 +373,7 @@ Always enumerate to find this info
 - Running processes
 ```
 
-Get the current username `> whoami` and group membership `> whoami /groups`
+Get the current username `> whoami` and group membership `> whoami /groups` or `> net user steve`
 
 Get all local user info `> Get-LocalUser`
 
@@ -398,6 +398,16 @@ Get install applicaitons `> Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microso
 Get running process info `> Get-Process`
 
 Get specific process information `>  Get-Process | Select-Object -Property Path, Name | Where-Object -Property Name -Like "*ProCeSsNaMEHeRE*"`
+
+### Find Sensitive Files
+
+Find `.kdbx` file in C drive `> Get-ChildItem -Path C:\ -Include *.kdbx -File -Recurse -ErrorAction SilentlyContinue`
+
+Find all text and ini config files in xamp `> Get-ChildItem -Path C:\xampp -Include *.txt,*.ini -File -Recurse -ErrorAction SilentlyContinue`
+
+Find all user files that may contian info in user folder `> Get-ChildItem -Path C:\Users\dave\ -Include *.txt,*.pdf,*.xls,*.xlsx,*.doc,*.docx -File -Recurse -ErrorAction SilentlyContinue`
+
+Print file to terminal `type C:\xampp\passwords.txt`
 
 # Anti-virus Evasion
 
