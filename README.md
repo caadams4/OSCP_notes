@@ -354,7 +354,48 @@ Try to compile exploits ON THE TARGET if possible!
 
 ## Windows
 
+### Understanding Security Identifier (SID)
 
+Windows assigns an SID to each entity (or principle) tha tauthenticates with Windows. Local objects are assigned an SId by the Local Security Authority and domain objects are assigned an SID from a Domain Controller.
+
+SID Structure: `S-1-X-Y` where X is the identifying authority and Y is the user's RID
+
+### Enumerate and Gather Info
+
+Always enumerate to find this info
+```
+- Username and hostname
+- Group memberships of the current user
+- Existing users and groups
+- Operating system, version and architecture
+- Network information
+- Installed applications
+- Running processes
+```
+
+Get the current username `> whoami` and group membership `> whoami /groups`
+
+Get all local user info `> Get-LocalUser`
+
+Get all non-standard groups info `> Get-LocalGroup`
+
+Get example group `adminteam` info `> Get-LocalGroupMember adminteam` 
+
+Get Administrator group info `> Get-LocalGroupMember Administrators`
+
+Get OS System info `> systeminfo`
+
+Get network IP  info `> ipconfig /all`
+
+Get network routing table info `> ipconfig /all`
+
+Get network connection info `> netstat -ano`
+
+Get install applicaitons `> Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*" | select displayname`
+
+...and `> Get-ItemProperty "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\*" | select displayname` 
+
+Get running process info `> Get-Process`
 
 # Anti-virus Evasion
 
