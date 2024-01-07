@@ -593,10 +593,10 @@ So lets place a binary inside one on the directories checked prior to the last
 
 Check each directory for write permissions (W):
 ```
-icacls "C:\Program.exe"
-icacls "C:\Program Files\Enterprise.exe"
-icacls "C:\Program Files\Enterprise Apps\Current.exe"
-icacls "C:\Program Files\Enterprise Apps\Current Version\GammaServ.exe"
+icacls "C:\"
+icacls "C:\Program Files"
+icacls "C:\Program Files\Enterprise Apps"
+icacls "C:\Program Files\Enterprise Apps\Current Version"
 ```
 
 Create an exe called adduser.exe
